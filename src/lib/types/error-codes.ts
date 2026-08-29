@@ -1,0 +1,198 @@
+/**
+ * SINGLE SOURCE OF TRUTH for every error code the platform can emit.
+ * Nothing anywhere else in the monorepo may declare a bare error-code string.
+ */
+export const ERROR_CODES = {
+  // --- generic -------------------------------------------------------------
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  NOT_FOUND: 'NOT_FOUND',
+  BAD_REQUEST: 'BAD_REQUEST',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  INVALID_INPUT: 'INVALID_INPUT',
+  CONFLICT: 'CONFLICT',
+  RATE_LIMITED: 'RATE_LIMITED',
+  SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+  PAYLOAD_TOO_LARGE: 'PAYLOAD_TOO_LARGE',
+  UNSUPPORTED_MEDIA_TYPE: 'UNSUPPORTED_MEDIA_TYPE',
+  IDEMPOTENCY_KEY_REQUIRED: 'IDEMPOTENCY_KEY_REQUIRED',
+  IDEMPOTENCY_KEY_REUSED: 'IDEMPOTENCY_KEY_REUSED',
+
+  // --- authentication ------------------------------------------------------
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS',
+  AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED',
+  AUTH_TOKEN_INVALID: 'AUTH_TOKEN_INVALID',
+  AUTH_TOKEN_REUSED: 'AUTH_TOKEN_REUSED',
+  AUTH_TOKEN_REVOKED: 'AUTH_TOKEN_REVOKED',
+  AUTH_EMAIL_NOT_VERIFIED: 'AUTH_EMAIL_NOT_VERIFIED',
+  AUTH_EMAIL_ALREADY_REGISTERED: 'AUTH_EMAIL_ALREADY_REGISTERED',
+  AUTH_ACCOUNT_SUSPENDED: 'AUTH_ACCOUNT_SUSPENDED',
+  AUTH_ACCOUNT_PENDING: 'AUTH_ACCOUNT_PENDING',
+  AUTH_RESET_TOKEN_INVALID: 'AUTH_RESET_TOKEN_INVALID',
+  AUTH_VERIFICATION_TOKEN_INVALID: 'AUTH_VERIFICATION_TOKEN_INVALID',
+  AUTH_PASSWORD_TOO_WEAK: 'AUTH_PASSWORD_TOO_WEAK',
+  AUTH_TOTP_REQUIRED: 'AUTH_TOTP_REQUIRED',
+  AUTH_TOTP_INVALID: 'AUTH_TOTP_INVALID',
+  AUTH_TOTP_ALREADY_ENABLED: 'AUTH_TOTP_ALREADY_ENABLED',
+  AUTH_TOTP_NOT_ENABLED: 'AUTH_TOTP_NOT_ENABLED',
+  AUTH_LOGIN_LOCKED: 'AUTH_LOGIN_LOCKED',
+
+  // --- authorization -------------------------------------------------------
+  FORBIDDEN: 'FORBIDDEN',
+  PORTAL_MISMATCH: 'PORTAL_MISMATCH',
+  PORTAL_NOT_ALLOWED: 'PORTAL_NOT_ALLOWED',
+  ROLE_NOT_ALLOWED: 'ROLE_NOT_ALLOWED',
+  NOT_RESOURCE_OWNER: 'NOT_RESOURCE_OWNER',
+  ADMIN_INVITE_INVALID: 'ADMIN_INVITE_INVALID',
+  ADMIN_INVITE_EXPIRED: 'ADMIN_INVITE_EXPIRED',
+  ADMIN_INVITE_ALREADY_USED: 'ADMIN_INVITE_ALREADY_USED',
+
+  // --- users / guides ------------------------------------------------------
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  GUIDE_NOT_FOUND: 'GUIDE_NOT_FOUND',
+  GUIDE_PROFILE_INCOMPLETE: 'GUIDE_PROFILE_INCOMPLETE',
+  GUIDE_NOT_VERIFIED: 'GUIDE_NOT_VERIFIED',
+
+  // --- content -------------------------------------------------------------
+  PLACE_NOT_FOUND: 'PLACE_NOT_FOUND',
+  PLACE_NOT_PUBLISHED: 'PLACE_NOT_PUBLISHED',
+  PLACE_SLUG_TAKEN: 'PLACE_SLUG_TAKEN',
+  EXPERIENCE_NOT_FOUND: 'EXPERIENCE_NOT_FOUND',
+  EXPERIENCE_NOT_PUBLISHED: 'EXPERIENCE_NOT_PUBLISHED',
+  STORY_NOT_FOUND: 'STORY_NOT_FOUND',
+  STORY_NOT_PUBLISHED: 'STORY_NOT_PUBLISHED',
+  STORY_SLUG_TAKEN: 'STORY_SLUG_TAKEN',
+  DESTINATION_NOT_FOUND: 'DESTINATION_NOT_FOUND',
+  CATEGORY_NOT_FOUND: 'CATEGORY_NOT_FOUND',
+  COLLECTION_NOT_FOUND: 'COLLECTION_NOT_FOUND',
+  COLLECTION_LIMIT_REACHED: 'COLLECTION_LIMIT_REACHED',
+  MODERATION_INVALID_TRANSITION: 'MODERATION_INVALID_TRANSITION',
+
+  // --- reviews -------------------------------------------------------------
+  REVIEW_NOT_FOUND: 'REVIEW_NOT_FOUND',
+  REVIEW_ALREADY_EXISTS: 'REVIEW_ALREADY_EXISTS',
+  REVIEW_NOT_ELIGIBLE: 'REVIEW_NOT_ELIGIBLE',
+  REVIEW_EDIT_WINDOW_CLOSED: 'REVIEW_EDIT_WINDOW_CLOSED',
+
+  // --- availability & bookings --------------------------------------------
+  SLOT_NOT_FOUND: 'SLOT_NOT_FOUND',
+  SLOT_CLOSED: 'SLOT_CLOSED',
+  SLOT_IN_PAST: 'SLOT_IN_PAST',
+  SLOT_SOLD_OUT: 'SLOT_SOLD_OUT',
+  SLOT_OVERLAP: 'SLOT_OVERLAP',
+  SLOT_HAS_BOOKINGS: 'SLOT_HAS_BOOKINGS',
+  BOOKING_NOT_FOUND: 'BOOKING_NOT_FOUND',
+  BOOKING_INVALID_STATE: 'BOOKING_INVALID_STATE',
+  BOOKING_EXPIRED: 'BOOKING_EXPIRED',
+  BOOKING_NOT_CANCELLABLE: 'BOOKING_NOT_CANCELLABLE',
+  BOOKING_SEATS_INVALID: 'BOOKING_SEATS_INVALID',
+
+  // --- payments ------------------------------------------------------------
+  PAYMENT_NOT_FOUND: 'PAYMENT_NOT_FOUND',
+  PAYMENT_PROVIDER_NOT_CONFIGURED: 'PAYMENT_PROVIDER_NOT_CONFIGURED',
+  PAYMENT_PROVIDER_ERROR: 'PAYMENT_PROVIDER_ERROR',
+  PAYMENT_SIGNATURE_INVALID: 'PAYMENT_SIGNATURE_INVALID',
+  PAYMENT_ALREADY_CAPTURED: 'PAYMENT_ALREADY_CAPTURED',
+  PAYMENT_AMOUNT_MISMATCH: 'PAYMENT_AMOUNT_MISMATCH',
+  PAYMENT_INVALID_STATE: 'PAYMENT_INVALID_STATE',
+  WEBHOOK_SIGNATURE_INVALID: 'WEBHOOK_SIGNATURE_INVALID',
+  REFUND_NOT_ALLOWED: 'REFUND_NOT_ALLOWED',
+  REFUND_AMOUNT_INVALID: 'REFUND_AMOUNT_INVALID',
+
+  // --- trips ---------------------------------------------------------------
+  TRIP_NOT_FOUND: 'TRIP_NOT_FOUND',
+  TRIP_DAY_NOT_FOUND: 'TRIP_DAY_NOT_FOUND',
+  TRIP_ACTIVITY_NOT_FOUND: 'TRIP_ACTIVITY_NOT_FOUND',
+  TRIP_LIMIT_REACHED: 'TRIP_LIMIT_REACHED',
+
+  // --- ai ------------------------------------------------------------------
+  AI_PROVIDER_NOT_CONFIGURED: 'AI_PROVIDER_NOT_CONFIGURED',
+  AI_PROVIDER_ERROR: 'AI_PROVIDER_ERROR',
+  AI_OUTPUT_INVALID: 'AI_OUTPUT_INVALID',
+  AI_HALLUCINATED_REFERENCE: 'AI_HALLUCINATED_REFERENCE',
+  AI_QUOTA_EXCEEDED: 'AI_QUOTA_EXCEEDED',
+  AI_PROMPT_REJECTED: 'AI_PROMPT_REJECTED',
+
+  // --- media ---------------------------------------------------------------
+  MEDIA_NOT_FOUND: 'MEDIA_NOT_FOUND',
+  MEDIA_TYPE_NOT_ALLOWED: 'MEDIA_TYPE_NOT_ALLOWED',
+  MEDIA_TOO_LARGE: 'MEDIA_TOO_LARGE',
+  MEDIA_UPLOAD_INCOMPLETE: 'MEDIA_UPLOAD_INCOMPLETE',
+  MEDIA_STORAGE_NOT_CONFIGURED: 'MEDIA_STORAGE_NOT_CONFIGURED',
+  MEDIA_QUOTA_EXCEEDED: 'MEDIA_QUOTA_EXCEEDED',
+
+  // --- maps ----------------------------------------------------------------
+  MAPS_PROVIDER_NOT_CONFIGURED: 'MAPS_PROVIDER_NOT_CONFIGURED',
+  MAPS_PROVIDER_ERROR: 'MAPS_PROVIDER_ERROR',
+
+  // --- notifications / reports --------------------------------------------
+  NOTIFICATION_NOT_FOUND: 'NOTIFICATION_NOT_FOUND',
+  REPORT_NOT_FOUND: 'REPORT_NOT_FOUND',
+  REPORT_ALREADY_RESOLVED: 'REPORT_ALREADY_RESOLVED',
+
+  // --- config --------------------------------------------------------------
+  RECOMMENDATION_CONFIG_NOT_FOUND: 'RECOMMENDATION_CONFIG_NOT_FOUND',
+  RECOMMENDATION_CONFIG_INVALID: 'RECOMMENDATION_CONFIG_INVALID',
+} as const;
+
+export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+
+/** Default HTTP status for each code. The exception filter uses this map. */
+export const ERROR_STATUS: Record<ErrorCode, number> = (() => {
+  const map: Partial<Record<ErrorCode, number>> = {
+    INTERNAL_ERROR: 500,
+    SERVICE_UNAVAILABLE: 503,
+    RATE_LIMITED: 429,
+    PAYLOAD_TOO_LARGE: 413,
+    UNSUPPORTED_MEDIA_TYPE: 415,
+    VALIDATION_ERROR: 422,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
+    FORBIDDEN: 403,
+    CONFLICT: 409,
+    BAD_REQUEST: 400,
+  };
+  const out = {} as Record<ErrorCode, number>;
+  for (const code of Object.values(ERROR_CODES)) {
+    if (map[code]) {
+      out[code] = map[code];
+      continue;
+    }
+    if (code.endsWith('_NOT_FOUND')) out[code] = 404;
+    else if (code.startsWith('AUTH_') || code === 'UNAUTHORIZED') out[code] = 401;
+    else if (
+      code === 'FORBIDDEN' ||
+      code.startsWith('PORTAL_') ||
+      code.startsWith('ROLE_') ||
+      code === 'NOT_RESOURCE_OWNER' ||
+      code.startsWith('ADMIN_INVITE_')
+    )
+      out[code] = 403;
+    else if (
+      code === 'CONFLICT' ||
+      code.includes('ALREADY') ||
+      code.includes('TAKEN') ||
+      code === 'SLOT_SOLD_OUT' ||
+      code === 'SLOT_OVERLAP' ||
+      code === 'IDEMPOTENCY_KEY_REUSED'
+    )
+      out[code] = 409;
+    else if (code.endsWith('_NOT_CONFIGURED') || code.endsWith('_PROVIDER_ERROR')) out[code] = 503;
+    else out[code] = 400;
+  }
+  return out;
+})();
+
+/** Human-readable default messages. Services may override per call site. */
+export const ERROR_MESSAGES: Partial<Record<ErrorCode, string>> = {
+  INTERNAL_ERROR: 'Something went wrong on our side.',
+  NOT_FOUND: 'The requested resource was not found.',
+  VALIDATION_ERROR: 'The request failed validation.',
+  UNAUTHORIZED: 'Authentication is required.',
+  FORBIDDEN: 'You do not have access to this resource.',
+  PORTAL_MISMATCH: 'This token was issued for a different Anvesh portal.',
+  AUTH_INVALID_CREDENTIALS: 'Email or password is incorrect.',
+  SLOT_SOLD_OUT: 'The remaining seats for this slot were just taken.',
+  AI_HALLUCINATED_REFERENCE: 'The assistant referenced a place that does not exist.',
+  RATE_LIMITED: 'Too many requests. Please slow down.',
+};
