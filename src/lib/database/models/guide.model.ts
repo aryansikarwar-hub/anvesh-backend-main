@@ -48,7 +48,11 @@ const guideProfileSchema = createSchema<GuideProfileDocument>({
   userId: { type: 'ObjectId', ref: 'User', required: true },
   slug: { type: String, required: true, lowercase: true, trim: true, maxlength: 100 },
   displayName: { type: String, required: true, trim: true, maxlength: 80 },
-  headline: { type: String, required: true, trim: true, maxlength: 140, default: '' },
+  // Not `required`: Mongoose's required check on a String is `length > 0`, so
+  // `required: true` with `default: ''` can never both hold — it rejected every
+  // self-service guide registration, which creates the profile with an empty
+  // headline for the guide to fill in later.
+  headline: { type: String, trim: true, maxlength: 140, default: '' },
   bio: { type: String, default: '', maxlength: 2000 },
   avatarUrl: { type: String, maxlength: 1000 },
   coverImageUrl: { type: String, maxlength: 1000 },
