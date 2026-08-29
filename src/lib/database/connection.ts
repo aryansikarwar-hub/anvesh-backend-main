@@ -25,7 +25,15 @@ export async function connectDatabase(options: ConnectOptions): Promise<Connecti
   if (connection && connection.readyState === 1) return connection;
 
   mongoose.set('strictQuery', true);
-  mongoose.set('sanitizeFilter', true);
+  // NOTE: `sanitizeFilter` is deliberately NOT set. It rewrites any filter value
+  // that looks like an operator — `{ expiresAt: { $lt: now } }` becomes
+  // `{ expiresAt: { $eq: { $lt: now } } }` — which breaks every legitimate range,
+  // $in and $ne query this codebase writes, and fails as a confusing CastError at
+  // runtime rather than at review time. NoSQL injection is already blocked one
+  // layer earlier and more strictly: `mongoSanitize()` (src/common/middleware)
+  // REJECTS any $-prefixed or dotted key in a request body, query or params
+  // instead of silently mangling it, so no user-controlled operator ever reaches
+  // a filter in the first place.
   mongoose.set('autoCreate', false);
   mongoose.set('autoIndex', options.autoIndex ?? false);
 
