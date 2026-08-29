@@ -99,7 +99,9 @@ const experiences = {
     slug: { bsonType: 'string', maxLength: 120 },
     title: { bsonType: 'string', minLength: 3, maxLength: 140 },
     basePriceMinor: money,
-    durationMin: { bsonType: ['int', 'long'], minimum: 15, maximum: 1440 },
+    // Up to 30 days: most experiences are a few hours, but multi-day treks
+    // and circuits (e.g. a 5-day trek) are real bookable experiences too.
+    durationMin: { bsonType: ['int', 'long'], minimum: 15, maximum: 43200 },
     maxSeats: { bsonType: ['int', 'long'], minimum: 1, maximum: 60 },
     images: { bsonType: 'array', maxItems: 12 },
     inclusions: { bsonType: 'array', maxItems: 15 },
