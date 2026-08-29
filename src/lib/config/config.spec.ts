@@ -52,18 +52,44 @@ describe('parseConfig', () => {
     expect(() => parseConfig({ ...base, NODE_ENV: 'production' })).toThrow(ConfigError);
   });
 
-  it('refuses the stub AI provider in production', () => {
+  it('allows the stub AI provider, and no payments/maps keys, in production', () => {
+    // Every feature behind an unconfigured provider degrades honestly instead
+    // of faking a result, so none of these are hard requirements — a
+    // deployment that deliberately skips Razorpay/Gemini/a paid maps
+    // provider is allowed to boot.
+    const cfg = parseConfig({
+      ...base,
+      NODE_ENV: 'production',
+      AI_PROVIDER: 'stub',
+      COOKIE_SECURE: 'true',
+    });
+    expect(cfg.isProduction).toBe(true);
+    expect(cfg.env.AI_PROVIDER).toBe('stub');
+    expect(cfg.providers.payments).toBe(false);
+  });
+
+  it('refuses a half-configured Razorpay in production', () => {
     expect(() =>
       parseConfig({
         ...base,
         NODE_ENV: 'production',
         AI_PROVIDER: 'stub',
-        RAZORPAY_KEY_ID: 'k',
-        RAZORPAY_KEY_SECRET: 's',
-        RAZORPAY_WEBHOOK_SECRET: 'w',
-        OLA_MAPS_API_KEY: 'm',
         COOKIE_SECURE: 'true',
+        RAZORPAY_KEY_ID: 'k',
+        // RAZORPAY_KEY_SECRET intentionally missing
       }),
-    ).toThrow(/stub/);
+    ).toThrow(/RAZORPAY/);
+  });
+
+  it('refuses maptiler in production without a key', () => {
+    expect(() =>
+      parseConfig({
+        ...base,
+        NODE_ENV: 'production',
+        AI_PROVIDER: 'stub',
+        COOKIE_SECURE: 'true',
+        MAPS_PROVIDER: 'maptiler',
+      }),
+    ).toThrow(/MAPTILER_API_KEY/);
   });
 });

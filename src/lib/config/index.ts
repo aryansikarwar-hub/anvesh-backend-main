@@ -35,7 +35,12 @@ function buildConfig(env: Env): AppConfig {
     providers: {
       payments: Boolean(env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET),
       ai: env.AI_PROVIDER === 'stub' ? true : Boolean(env.GEMINI_API_KEY),
-      maps: env.MAPS_PROVIDER === 'maplibre-demo' ? true : Boolean(env.OLA_MAPS_API_KEY),
+      maps:
+        env.MAPS_PROVIDER === 'maplibre-demo'
+          ? true
+          : env.MAPS_PROVIDER === 'maptiler'
+            ? Boolean(env.MAPTILER_API_KEY)
+            : Boolean(env.OLA_MAPS_API_KEY),
       email:
         env.EMAIL_PROVIDER === 'resend'
           ? Boolean(env.RESEND_API_KEY)
@@ -62,11 +67,36 @@ export function parseConfig(source: NodeJS.ProcessEnv = process.env): AppConfig 
 function assertProductionRequirements(cfg: AppConfig): void {
   if (!cfg.isProduction) return;
   const missing: string[] = [];
-  if (!cfg.providers.payments) missing.push('RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET');
-  if (cfg.env.AI_PROVIDER === 'stub') missing.push('AI_PROVIDER must not be "stub" in production');
-  if (!cfg.providers.ai) missing.push('GEMINI_API_KEY');
-  if (!cfg.providers.maps) missing.push('OLA_MAPS_API_KEY');
-  if (!cfg.env.RAZORPAY_WEBHOOK_SECRET) missing.push('RAZORPAY_WEBHOOK_SECRET');
+
+  // Razorpay, Gemini and a paid maps provider are all optional in production:
+  // every feature that needs one already degrades honestly (payments return
+  // 503 PAYMENT_PROVIDER_NOT_CONFIGURED, AI falls back to the deterministic
+  // stub provider with a visible notice, maps fall back to the OSM demo
+  // style) rather than faking a result. What *is* still enforced is that a
+  // provider isn't left half-configured — e.g. a Razorpay key id with no
+  // matching secret, which would fail at request time instead of at boot.
+  const hasAnyRazorpayField = Boolean(
+    cfg.env.RAZORPAY_KEY_ID || cfg.env.RAZORPAY_KEY_SECRET || cfg.env.RAZORPAY_WEBHOOK_SECRET,
+  );
+  if (hasAnyRazorpayField && !cfg.providers.payments) {
+    missing.push('RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET (partially set — set both or neither)');
+  }
+  if (hasAnyRazorpayField && cfg.providers.payments && !cfg.env.RAZORPAY_WEBHOOK_SECRET) {
+    missing.push('RAZORPAY_WEBHOOK_SECRET (required once Razorpay keys are set)');
+  }
+
+  if (cfg.env.AI_PROVIDER === 'gemini' && !cfg.providers.ai) {
+    missing.push('GEMINI_API_KEY (required when AI_PROVIDER=gemini)');
+  }
+
+  if (!cfg.providers.maps) {
+    missing.push(
+      cfg.env.MAPS_PROVIDER === 'maptiler'
+        ? 'MAPTILER_API_KEY (required when MAPS_PROVIDER=maptiler)'
+        : 'OLA_MAPS_API_KEY (required when MAPS_PROVIDER=ola)',
+    );
+  }
+
   if (!cfg.env.COOKIE_SECURE) missing.push('COOKIE_SECURE must be true in production');
   if (missing.length) throw new ConfigError(missing.map((m) => `${m} is required in production`));
 }
@@ -93,7 +123,15 @@ export function describeMissingProviders(cfg: AppConfig): string[] {
   const notes: string[] = [];
   if (!cfg.providers.payments) notes.push('payments (Razorpay keys missing)');
   if (!cfg.providers.ai) notes.push('ai (Gemini key missing)');
-  if (!cfg.providers.maps) notes.push('maps (Ola Maps key missing)');
+  if (!cfg.providers.maps) {
+    notes.push(
+      cfg.env.MAPS_PROVIDER === 'maptiler'
+        ? 'maps (MapTiler key missing)'
+        : cfg.env.MAPS_PROVIDER === 'ola'
+          ? 'maps (Ola Maps key missing)'
+          : 'maps',
+    );
+  }
   return notes;
 }
 

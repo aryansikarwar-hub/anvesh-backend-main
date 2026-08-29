@@ -64,9 +64,11 @@ export const envSchema = z.object({
   GEMINI_BASE_URL: z.url().default('https://generativelanguage.googleapis.com'),
   AI_MONTHLY_REQUEST_LIMIT: z.coerce.number().int().min(1).default(200),
 
-  MAPS_PROVIDER: z.enum(['ola', 'maplibre-demo']).default('ola'),
+  MAPS_PROVIDER: z.enum(['ola', 'maptiler', 'maplibre-demo']).default('maplibre-demo'),
   OLA_MAPS_API_KEY: z.string().optional(),
   OLA_MAPS_BASE_URL: z.url().default('https://api.olamaps.io'),
+  MAPTILER_API_KEY: z.string().optional(),
+  MAPTILER_BASE_URL: z.url().default('https://api.maptiler.com'),
 
   // 'console' logs the email instead of sending it, so nothing extra has to
   // run locally. Set 'smtp' or 'resend' when you actually want delivery.
