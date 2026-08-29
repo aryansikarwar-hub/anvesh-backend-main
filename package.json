@@ -40,9 +40,8 @@
     "pino-http": "11.0.0",
     "rate-limiter-flexible": "11.2.0",
     "swagger-ui-express": "5.0.1",
-    "zod": "4.4.3"
-  },
-  "devDependencies": {
+    "zod": "4.4.3",
+    "typescript": "5.9.3",
     "@types/compression": "1.8.1",
     "@types/cookie-parser": "1.4.10",
     "@types/cors": "2.8.19",
@@ -50,12 +49,13 @@
     "@types/jsonwebtoken": "9.0.10",
     "@types/node": "22.13.0",
     "@types/nodemailer": "7.0.4",
+    "@types/swagger-ui-express": "4.1.8"
+  },
+  "devDependencies": {
     "@types/supertest": "6.0.3",
-    "@types/swagger-ui-express": "4.1.8",
     "mongodb-memory-server": "10.4.3",
     "supertest": "7.2.2",
     "tsx": "4.23.12",
-    "typescript": "5.9.3",
     "vitest": "3.2.7"
   }
 }
