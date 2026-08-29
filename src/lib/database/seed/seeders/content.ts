@@ -3,6 +3,7 @@ import { PLACE_SEEDS } from '../data/places';
 import { EXPERIENCE_SEEDS } from '../data/experiences';
 import { STORY_SEEDS } from '../data/stories';
 import { seedId, type SeedContext } from '../context';
+import { buildPlaceImages } from '../place-images';
 import { type SeededPeople } from './people';
 
 interface GuideSummaryShape {
@@ -71,9 +72,12 @@ export async function seedPlaces(ctx: SeedContext, people: SeededPeople): Promis
           status: 'PUBLISHED',
           createdBy: rootAdminId,
           deletedAt: null,
+          // In $set, not $setOnInsert: re-running the seed after adding a
+          // MAPTILER_API_KEY should backfill imagery onto places that were
+          // created without it.
+          images: buildPlaceImages(p.slug, p.title, p.lng, p.lat),
         },
         $setOnInsert: {
-          images: [],
           openingHours: [],
           discoveryScore: 0,
           'signals.ratingAvg': 0,
@@ -85,7 +89,8 @@ export async function seedPlaces(ctx: SeedContext, people: SeededPeople): Promis
       { upsert: true },
     );
   }
-  ctx.log(`places: ${PLACE_SEEDS.length}`);
+  const withImages = process.env.MAPTILER_API_KEY ? 'with imagery' : 'no imagery (MAPTILER_API_KEY unset)';
+  ctx.log(`places: ${PLACE_SEEDS.length} (${withImages})`);
 }
 
 export async function seedExperiences(ctx: SeedContext, people: SeededPeople): Promise<void> {
@@ -134,9 +139,9 @@ export async function seedExperiences(ctx: SeedContext, people: SeededPeople): P
             : null,
           status: 'PUBLISHED',
           deletedAt: null,
+          images: buildPlaceImages(e.slug, e.title, e.lng, e.lat),
         },
         $setOnInsert: {
-          images: [],
           'signals.ratingAvg': 0,
           'signals.ratingCount': 0,
           'signals.popularityScore': 0,

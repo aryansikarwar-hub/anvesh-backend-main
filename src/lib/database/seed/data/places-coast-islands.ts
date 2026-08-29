@@ -1,0 +1,270 @@
+import { type PlaceSeed } from './place-types';
+
+/**
+ * Coast and islands — the Konkan and Malabar shorelines, the eastern seaboard,
+ * the Andaman and Nicobar Islands and Lakshadweep.
+ *
+ * Every entry is a real place. Coordinates are real-world approximations good
+ * enough for map and geo-query behaviour, not survey-grade.
+ */
+export const PLACES_COAST_ISLANDS: PlaceSeed[] = [
+  // --- Andaman and Nicobar Islands ----------------------------------------
+  {
+    slug: 'radhanagar-beach-havelock',
+    title: 'Radhanagar Beach, Swaraj Dweep',
+    summary: 'A long white crescent backed by rainforest, with no construction on the sand.',
+    description:
+      'Radhanagar on Swaraj Dweep runs about two kilometres with mahua forest coming right down to the back of the beach and nothing built on it — no shacks, no hotels, no jet skis. Swimming is safe inside the marked area. Saltwater crocodile warnings on some Andaman beaches are real and the lifeguards will tell you where not to go.',
+    categorySlugs: ['beach'],
+    lng: 92.9469, lat: 11.9833, city: 'Swaraj Dweep', district: 'South Andaman', state: 'Andaman and Nicobar Islands',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [11, 12, 1, 2, 3, 4],
+    durationMin: 180, amenities: ['Lifeguards', 'Changing rooms', 'Food stalls behind the treeline'],
+    tips: ['Beach closes at sunset and that rule is enforced', 'Swim inside the flags, currents run hard outside them'],
+    quality: 0.9, authenticity: 0.7, localOwnership: 0.4, uniqueness: 0.85,
+    popularity: 0.7, crowd: 0.55, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'neil-island-bharatpur-reef',
+    title: 'Shaheed Dweep Reefs',
+    summary: 'Shallow live coral you can snorkel to from the sand, on a small farming island.',
+    description:
+      'Shaheed Dweep is small, flat and mostly paddy and banana, with reef close enough to shore at Bharatpur that you can swim to it. Laxmanpur has a natural rock bridge exposed at low tide. The island runs on bicycles and one road, and the pace is entirely different from Port Blair.',
+    categorySlugs: ['beach', 'wildlife', 'village-stay'],
+    lng: 93.0333, lat: 11.8333, city: 'Shaheed Dweep', district: 'South Andaman', state: 'Andaman and Nicobar Islands',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [11, 12, 1, 2, 3, 4],
+    durationMin: 300, amenities: ['Snorkel hire', 'Glass-bottom boats', 'Cycle hire'],
+    tips: ['Do not stand on the coral, it kills it and cuts you', 'The natural bridge is only reachable at low tide'],
+    quality: 0.86, authenticity: 0.8, localOwnership: 0.6, uniqueness: 0.85,
+    popularity: 0.5, crowd: 0.4, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'ross-island-ruins',
+    title: 'Ross Island',
+    summary: 'A colonial administrative capital being taken apart by banyan roots.',
+    description:
+      'Netaji Subhas Chandra Bose Dweep was the British administrative headquarters of the Andamans until the 1941 earthquake and the Japanese occupation ended it. The church, bakery, ballroom and presses are still standing, wrapped in ficus and banyan roots. Spotted deer and peacocks wander the ruins.',
+    categorySlugs: ['heritage', 'walk', 'wildlife'],
+    lng: 92.7625, lat: 11.6797, city: 'Port Blair', district: 'South Andaman', state: 'Andaman and Nicobar Islands',
+    ownership: 'GOVERNMENT', entryFeeMinor: 3000, bestTimeMonths: [11, 12, 1, 2, 3, 4],
+    durationMin: 150, amenities: ['Ferry from Aberdeen jetty', 'Marked paths', 'Light and sound show'],
+    tips: ['Ferries run on fixed timings, check the last one back', 'Do not feed the deer, they are aggressive about it'],
+    quality: 0.84, authenticity: 0.85, localOwnership: 0.35, uniqueness: 0.92,
+    popularity: 0.55, crowd: 0.5, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'cellular-jail-port-blair',
+    title: 'Cellular Jail, Port Blair',
+    summary: 'The colonial prison built so no inmate could see or speak to another.',
+    description:
+      'Kala Pani was designed as seven wings radiating from a central tower, with every cell facing the back of another wing so prisoners could not communicate. Independence-movement prisoners were held here in conditions that killed many of them. Three wings survive, along with the gallows and the oil mill.',
+    categorySlugs: ['heritage', 'walk'],
+    lng: 92.7479, lat: 11.6754, city: 'Port Blair', district: 'South Andaman', state: 'Andaman and Nicobar Islands',
+    ownership: 'GOVERNMENT', entryFeeMinor: 3000, bestTimeMonths: [11, 12, 1, 2, 3, 4],
+    durationMin: 150, amenities: ['Museum', 'Light and sound show', 'Ticket counter'],
+    tips: ['The evening light and sound show is worth staying for', 'Go up the central tower to understand the design'],
+    quality: 0.88, authenticity: 0.85, localOwnership: 0.3, uniqueness: 0.9,
+    popularity: 0.75, crowd: 0.6, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'agatti-lagoon-lakshadweep',
+    title: 'Agatti Lagoon',
+    summary: 'A coral atoll lagoon where the water shades from clear to deep blue at the drop.',
+    description:
+      'Agatti is a narrow coral island with a lagoon on one side and a reef edge on the other, and it is the only island in Lakshadweep with an airstrip. Entry to Lakshadweep requires a permit for all Indian visitors. The reef is in better condition than most in the country, and the fishing here is still small-boat pole and line.',
+    categorySlugs: ['beach', 'wildlife', 'village-stay'],
+    lng: 72.1833, lat: 10.85, city: 'Agatti', district: 'Lakshadweep', state: 'Lakshadweep',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [10, 11, 12, 1, 2, 3, 4],
+    durationMin: 480, amenities: ['Permit-based entry', 'Snorkelling and diving', 'Island resorts'],
+    tips: ['Entry permit is mandatory and must be arranged before travel', 'Alcohol is prohibited across the islands'],
+    quality: 0.9, authenticity: 0.85, localOwnership: 0.6, uniqueness: 0.92,
+    popularity: 0.35, crowd: 0.25, destinationSlug: null, guideKey: null,
+  },
+
+  // --- Konkan and Goa ------------------------------------------------------
+  {
+    slug: 'ganpatipule-beach',
+    title: 'Ganpatipule',
+    summary: 'A clean Konkan bay with a swayambhu Ganpati temple right on the sand.',
+    description:
+      'Ganpatipule\'s temple sits at the foot of a wooded hill directly on the beach, and the deity is a self-manifested rock rather than an installed idol, which is why the pradakshina goes around the whole hill. The bay itself is one of the cleaner stretches of the Ratnagiri coast, with white sand and casuarina.',
+    categorySlugs: ['beach', 'ritual'],
+    lng: 73.2667, lat: 17.15, city: 'Ganpatipule', district: 'Ratnagiri', state: 'Maharashtra',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [10, 11, 12, 1, 2],
+    durationMin: 240, amenities: ['MTDC resort', 'Temple', 'Konkan food stalls'],
+    tips: ['The hill circumambulation is about a kilometre, do it early', 'Alphonso season in April and May is the other reason to be here'],
+    quality: 0.78, authenticity: 0.75, localOwnership: 0.6, uniqueness: 0.7,
+    popularity: 0.5, crowd: 0.5, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'vengurla-sagareshwar-beach',
+    title: 'Vengurla Coast',
+    summary: 'Red laterite headlands, cashew groves and beaches with nobody on them.',
+    description:
+      'Vengurla in south Sindhudurg has a string of small bays — Sagareshwar, Nivti, Mochemad — separated by laterite headlands, with cashew and coconut behind. The Vengurla rocks offshore hold a seabird colony. It is the last stretch of Maharashtra before Goa and gets a fraction of the traffic.',
+    categorySlugs: ['beach', 'birding', 'homestay'],
+    lng: 73.6333, lat: 15.8667, city: 'Vengurla', district: 'Sindhudurg', state: 'Maharashtra',
+    ownership: 'LOCAL_OWNED', entryFeeMinor: 0, bestTimeMonths: [11, 12, 1, 2, 3],
+    durationMin: 300, amenities: ['Homestays', 'Boat trips', 'Local seafood'],
+    tips: ['Nivti rocks at low tide are the best of the coastline here', 'Homestays serve better fish than any restaurant'],
+    quality: 0.8, authenticity: 0.88, localOwnership: 0.85, uniqueness: 0.75,
+    popularity: 0.2, crowd: 0.18, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'kashid-beach',
+    title: 'Kashid Beach',
+    summary: 'Three kilometres of white sand between Alibaug and Murud, backed by casuarina.',
+    description:
+      'Kashid has finer, paler sand than most of the north Konkan and a casuarina belt behind it. The Murud-Janjira sea fort, never taken in five centuries of attempts, is a short drive south and reached by sailboat from Rajapuri. Weekends bring Mumbai traffic; weekdays do not.',
+    categorySlugs: ['beach', 'heritage'],
+    lng: 72.8833, lat: 18.4333, city: 'Kashid', district: 'Raigad', state: 'Maharashtra',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [11, 12, 1, 2, 3],
+    durationMin: 240, amenities: ['Beach shacks', 'Homestays', 'Water sports'],
+    tips: ['Janjira fort is 20 km away and worth the half day', 'Avoid weekends if you want the beach to yourself'],
+    quality: 0.76, authenticity: 0.68, localOwnership: 0.6, uniqueness: 0.65,
+    popularity: 0.55, crowd: 0.55, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'dudhsagar-falls',
+    title: 'Dudhsagar Falls',
+    summary: 'A four-tier fall on the Mandovi with a railway line running across its face.',
+    description:
+      'Dudhsagar drops about 310 metres in four tiers inside Bhagwan Mahaveer sanctuary, and the Konkan railway crosses the rock face partway down, which is how most people first see it. Access is by forest jeep from Kulem; private vehicles are not allowed. It is at full volume in and just after the monsoon.',
+    categorySlugs: ['waterfall', 'monsoon', 'wildlife', 'trek'],
+    lng: 74.3144, lat: 15.3144, city: 'Kulem', district: 'South Goa', state: 'Goa',
+    ownership: 'GOVERNMENT', entryFeeMinor: 40000, bestTimeMonths: [9, 10, 11, 12, 1],
+    durationMin: 300, amenities: ['Forest jeep service', 'Guides', 'Swimming pool at the base in season'],
+    tips: ['Jeeps only from Kulem, book at the counter and expect a queue', 'Walking the railway track is illegal and people have been killed doing it'],
+    quality: 0.88, authenticity: 0.7, localOwnership: 0.5, uniqueness: 0.9,
+    popularity: 0.7, crowd: 0.65, destinationSlug: null, guideKey: null,
+  },
+
+  // --- Karnataka and Kerala coast -----------------------------------------
+  {
+    slug: 'jog-falls',
+    title: 'Jog Falls',
+    summary: 'The Sharavathi dropping 250 metres in four separate streams, undivided by rock.',
+    description:
+      'Jog is one of the highest plunge waterfalls in India, and unusually the Sharavathi falls straight rather than cascading over steps. The four streams have names — Raja, Rani, Rocket and Roarer. Flow is controlled by the Linganamakki dam upstream, so the volume depends on releases as much as on rain.',
+    categorySlugs: ['waterfall', 'monsoon'],
+    lng: 74.8125, lat: 14.2294, city: 'Jog Falls', district: 'Shivamogga', state: 'Karnataka',
+    ownership: 'GOVERNMENT', entryFeeMinor: 2000, bestTimeMonths: [8, 9, 10, 11],
+    durationMin: 180, amenities: ['Viewpoints', 'Stepped descent', 'Parking and stalls'],
+    tips: ['August and September are when the dam releases and it is spectacular', 'The 1,400 steps to the base are hard coming up'],
+    quality: 0.86, authenticity: 0.7, localOwnership: 0.4, uniqueness: 0.88,
+    popularity: 0.7, crowd: 0.65, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'kaup-beach-lighthouse',
+    title: 'Kaup Beach and Lighthouse',
+    summary: 'A black rock headland with an 1901 lighthouse, between Udupi and Mangaluru.',
+    description:
+      'Kaup\'s lighthouse stands on a laterite outcrop at the end of the beach and is open to climb in the evenings. The rocks below hold tide pools, and the beach either side is broad and largely undeveloped. Sunset from the gallery is the reason most people come, and it is still a local rather than a tourist crowd.',
+    categorySlugs: ['beach', 'heritage'],
+    lng: 74.7, lat: 13.2167, city: 'Kaup', district: 'Udupi', state: 'Karnataka',
+    ownership: 'GOVERNMENT', entryFeeMinor: 1000, bestTimeMonths: [10, 11, 12, 1, 2, 3],
+    durationMin: 120, amenities: ['Lighthouse gallery', 'Beach access', 'Snack stalls'],
+    tips: ['Lighthouse opens only for a couple of hours in the late afternoon', 'The rocks are slippery, and the sea here is not for casual swimming'],
+    quality: 0.75, authenticity: 0.8, localOwnership: 0.6, uniqueness: 0.7,
+    popularity: 0.3, crowd: 0.35, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'marari-beach-village',
+    title: 'Marari Beach',
+    summary: 'A working fishing village beach in Alappuzha, with no promenade and no noise.',
+    description:
+      'Mararikulam is a fishing village first and a beach second — the boats go out at night and the catch is sorted on the sand in the morning. Coir making happens in the lanes behind. It is half an hour from the Alappuzha backwater jetties and completely unlike them in feel.',
+    categorySlugs: ['beach', 'village-stay', 'local-food', 'homestay'],
+    lng: 76.3, lat: 9.6, city: 'Mararikulam', district: 'Alappuzha', state: 'Kerala',
+    ownership: 'LOCAL_OWNED', entryFeeMinor: 0, bestTimeMonths: [10, 11, 12, 1, 2, 3],
+    durationMin: 300, amenities: ['Homestays', 'Beach shacks', 'Ayurveda centres'],
+    tips: ['Be on the sand at dawn when the boats land', 'The undertow is strong here, swim with care'],
+    quality: 0.84, authenticity: 0.9, localOwnership: 0.88, uniqueness: 0.75,
+    popularity: 0.35, crowd: 0.28, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'bekal-fort-beach',
+    title: 'Bekal Fort',
+    summary: 'A keyhole-shaped laterite sea fort in north Kerala, with the beach at its feet.',
+    description:
+      'Bekal is the largest fort in Kerala, built in laterite on a headland with the sea on three sides and a distinctive keyhole plan. It was never a residence, only a garrison, so the interior is mostly open ground with an observation tower. The Kasaragod coast around it is quiet and Theyyam country inland.',
+    categorySlugs: ['heritage', 'beach', 'walk'],
+    lng: 75.0333, lat: 12.3833, city: 'Bekal', district: 'Kasaragod', state: 'Kerala',
+    ownership: 'GOVERNMENT', entryFeeMinor: 2500, bestTimeMonths: [10, 11, 12, 1, 2],
+    durationMin: 150, amenities: ['Ticket counter', 'Beach park', 'Observation tower'],
+    tips: ['Late afternoon avoids the heat on the open laterite', 'Theyyam season inland from December is worth combining'],
+    quality: 0.82, authenticity: 0.8, localOwnership: 0.45, uniqueness: 0.85,
+    popularity: 0.4, crowd: 0.38, destinationSlug: null, guideKey: 'guide-fahad',
+  },
+  {
+    slug: 'athirappilly-falls',
+    title: 'Athirappilly Falls',
+    summary: 'The Chalakudy dropping 25 metres across a wide rock face, in hornbill forest.',
+    description:
+      'Athirappilly is the widest fall in Kerala and the riverine forest around it is one of the few places in the Western Ghats where all four south Indian hornbill species occur. A proposed hydel project on this stretch has been fought for decades on exactly those grounds. A path leads down to the base pool.',
+    categorySlugs: ['waterfall', 'monsoon', 'wildlife', 'birding'],
+    lng: 76.5697, lat: 10.2853, city: 'Athirappilly', district: 'Thrissur', state: 'Kerala',
+    ownership: 'GOVERNMENT', entryFeeMinor: 4000, bestTimeMonths: [7, 8, 9, 10, 11, 12],
+    durationMin: 180, amenities: ['Ticket counter', 'Path to the base', 'Viewpoints'],
+    tips: ['The base path closes when the river is high, and that rule saves lives', 'Vazhachal upstream is quieter and better for hornbills'],
+    quality: 0.86, authenticity: 0.72, localOwnership: 0.4, uniqueness: 0.85,
+    popularity: 0.68, crowd: 0.6, destinationSlug: null, guideKey: null,
+  },
+
+  // --- Eastern seaboard ----------------------------------------------------
+  {
+    slug: 'gopalpur-on-sea',
+    title: 'Gopalpur-on-Sea',
+    summary: 'A decayed colonial port on the Odisha coast, with the old jetty still standing.',
+    description:
+      'Gopalpur was a working port trading with Southeast Asia before silting and the railways finished it, and the ruined loading jetty still runs out into the surf. What is left is a wide beach, a lighthouse, a few old buildings and a fishing village. Berhampur\'s silk weaving is half an hour inland.',
+    categorySlugs: ['beach', 'heritage', 'local-food'],
+    lng: 84.9167, lat: 19.2667, city: 'Gopalpur', district: 'Ganjam', state: 'Odisha',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [10, 11, 12, 1, 2],
+    durationMin: 180, amenities: ['Beach access', 'Lighthouse', 'Hotels and shacks'],
+    tips: ['The sea here has a strong undertow, swim only where locals do', 'Fresh crab from the village stalls in the evening'],
+    quality: 0.76, authenticity: 0.85, localOwnership: 0.7, uniqueness: 0.78,
+    popularity: 0.3, crowd: 0.3, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'rushikulya-olive-ridley',
+    title: 'Rushikulya Rookery',
+    summary: 'One of the largest olive ridley mass nesting beaches on earth.',
+    description:
+      'Arribada — synchronised mass nesting — happens at Rushikulya over a few nights, with hundreds of thousands of olive ridleys coming ashore on a short stretch of sand near the river mouth. It does not happen every year and the dates cannot be predicted far ahead. Forest department and volunteers control access during the event.',
+    categorySlugs: ['beach', 'wildlife'],
+    lng: 85.0667, lat: 19.3667, city: 'Purunabandha', district: 'Ganjam', state: 'Odisha',
+    ownership: 'GOVERNMENT', entryFeeMinor: 0, bestTimeMonths: [2, 3, 4],
+    durationMin: 240, amenities: ['Forest department control point', 'Volunteer camps'],
+    tips: ['No white light on the beach at all, hatchlings orient by the horizon', 'The arribada is unpredictable — follow forest department announcements'],
+    quality: 0.9, authenticity: 0.92, localOwnership: 0.5, uniqueness: 0.96,
+    popularity: 0.15, crowd: 0.2, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'yanam-coringa-mangroves',
+    title: 'Coringa Wildlife Sanctuary',
+    summary: 'The second largest mangrove stretch on the east coast, in the Godavari delta.',
+    description:
+      'Coringa protects mangrove in the Godavari estuary and is one of the few places holding the fishing cat and the smooth-coated otter, along with saltwater crocodile. A boardwalk runs into the mangrove and boats work the creeks. The delta villages here fish and farm prawns on the fringe.',
+    categorySlugs: ['wildlife', 'birding', 'lake'],
+    lng: 82.25, lat: 16.8, city: 'Coringa', district: 'Kakinada', state: 'Andhra Pradesh',
+    ownership: 'GOVERNMENT', entryFeeMinor: 5000, bestTimeMonths: [11, 12, 1, 2, 3],
+    durationMin: 180, amenities: ['Boardwalk', 'Boat trips', 'Interpretation centre'],
+    tips: ['Boats need arranging at the forest office, not at the gate', 'Fishing cats are nocturnal and almost never seen, manage expectations'],
+    quality: 0.8, authenticity: 0.85, localOwnership: 0.5, uniqueness: 0.85,
+    popularity: 0.12, crowd: 0.12, destinationSlug: null, guideKey: null,
+  },
+  {
+    slug: 'tranquil-tarkarli-scuba',
+    title: 'Sindhudurg Reef Diving, Malvan',
+    summary: 'The only reef diving on the Maharashtra coast, off a Maratha sea fort.',
+    description:
+      'The rocky reef around Sindhudurg fort holds coral patches and reef fish, and Malvan is the one place on this coast with organised diving. Visibility is nothing like the Andamans and is honest about it. Malvani food — sol kadhi, kombdi vade, fresh surmai — is a large part of why people come.',
+    categorySlugs: ['beach', 'local-food', 'heritage'],
+    lng: 73.4667, lat: 16.05, city: 'Malvan', district: 'Sindhudurg', state: 'Maharashtra',
+    ownership: 'LOCAL_OWNED', entryFeeMinor: 150000, bestTimeMonths: [11, 12, 1, 2, 3, 4, 5],
+    durationMin: 300, amenities: ['Dive operators', 'Homestays', 'Boats to the fort'],
+    tips: ['Check the operator is PADI or SSI certified, several are not', 'Diving closes entirely through the monsoon'],
+    quality: 0.78, authenticity: 0.82, localOwnership: 0.85, uniqueness: 0.8,
+    popularity: 0.45, crowd: 0.45, destinationSlug: null, guideKey: null,
+  },
+];
