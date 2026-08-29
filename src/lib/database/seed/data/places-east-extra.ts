@@ -287,7 +287,7 @@ export const PLACES_EAST_EXTRA: PlaceSeed[] = [
     description:
       'Sohrai is painted at the cattle harvest festival and Khovar in the marriage season, both directly on mud house walls using natural earth pigments and a comb of cloth or twig. The motifs — cattle, forest, fertility — have been linked to the rock art in the Isko caves nearby. Villages north of Hazaribagh repaint every year.',
     categorySlugs: ['craft', 'ritual', 'village-stay'],
-    lng: 85.3667, lat: 24.0, city: 'Hazaribagh', district: 'Hazaribagh', state: 'Jharkhand',
+    lng: 85.3616, lat: 23.9981, city: 'Hazaribagh', district: 'Hazaribagh', state: 'Jharkhand',
     ownership: 'COMMUNITY', entryFeeMinor: 0, bestTimeMonths: [10, 11, 12, 1, 2],
     durationMin: 240, amenities: ['Village visits', 'Art centre in Hazaribagh'],
     tips: ['Sohrai walls are painted around the October-November festival', 'Go through the Hazaribagh art centre, they arrange proper village visits'],
