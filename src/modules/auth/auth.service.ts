@@ -58,8 +58,37 @@ export class AuthService {
       await this.guides.createForUser(String(user._id), input.displayName);
     }
 
-    await this.accounts.sendVerificationEmail(user);
+    // Verification mail is best-effort. The account exists and is PENDING either
+    // way, so a mailer outage must not turn a successful signup into a 503.
+    // The user can request a fresh link from the resend endpoint.
+    try {
+      await this.accounts.sendVerificationEmail(user);
+    } catch (err) {
+      console.error('[auth.register] verification email failed', {
+        userId: String(user._id),
+        err,
+      });
+    }
+
     return toPublicUser(user);
+  }
+
+  /**
+   * Re-sends the verification link. Always resolves, whether or not the address
+   * belongs to an account, so the endpoint cannot be used to enumerate emails.
+   */
+  async resendVerificationEmail(email: string): Promise<void> {
+    const user = await this.repo.findByEmail(email);
+    if (!user || user.status !== 'PENDING') return;
+
+    try {
+      await this.accounts.sendVerificationEmail(user);
+    } catch (err) {
+      console.error('[auth.resendVerification] verification email failed', {
+        userId: String(user._id),
+        err,
+      });
+    }
   }
 
   async login(input: LoginInput, meta: RequestMeta): Promise<AuthSession> {
