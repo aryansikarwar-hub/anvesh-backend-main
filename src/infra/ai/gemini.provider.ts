@@ -92,22 +92,31 @@ interface GeminiModelList {
 }
 
 /** Variants we never want to auto-pick for plain JSON text generation. */
-const UNSUITABLE = /(lite|image|tts|live|audio|native|exp|thinking|computer|robotics|embedding|vision|learnlm|gemma)/i;
+const UNSUITABLE = /(image|tts|live|audio|native|exp|thinking|computer|robotics|embedding|vision|learnlm|gemma)/i;
+const MAX_FALLBACK_MODELS = 3;
 
 /**
- * Picks the newest plain "gemini-<version>-flash" model that can generateContent.
- * Exported for tests.
+ * Usable text models for this key, best first: newest plain "gemini-<v>-flash",
+ * then the newest "-flash-lite" (cheaper, rarely overloaded). Exported for tests.
  */
-export function pickFlashModel(list: GeminiModelList): string | null {
-  const scored = (list.models ?? [])
+export function pickFlashModels(list: GeminiModelList): string[] {
+  const names = (list.models ?? [])
     .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
     .map((m) => (m.name ?? '').replace(/^models\//, ''))
-    .filter((name) => /^gemini-\d+(\.\d+)?-flash(-\d+)?$/.test(name) && !UNSUITABLE.test(name))
-    .map((name) => ({ name, version: parseFloat(/^gemini-(\d+(?:\.\d+)?)-flash/.exec(name)?.[1] ?? '0') }))
-    .sort((a, b) => b.version - a.version || a.name.length - b.name.length);
-  if (scored[0]) return scored[0].name;
-  const alias = (list.models ?? []).find((m) => m.name === 'models/gemini-flash-latest');
-  return alias ? 'gemini-flash-latest' : null;
+    .filter((name) => !UNSUITABLE.test(name));
+  const version = (name: string) => parseFloat(/^gemini-(\d+(?:\.\d+)?)-/.exec(name)?.[1] ?? '0');
+  const byNewest = (a: string, b: string) => version(b) - version(a) || a.length - b.length;
+  const flash = names.filter((n) => /^gemini-\d+(\.\d+)?-flash(-\d+)?$/.test(n)).sort(byNewest);
+  const lite = names.filter((n) => /^gemini-\d+(\.\d+)?-flash-lite(-\d+)?$/.test(n)).sort(byNewest);
+  const out = [...flash, ...lite];
+  if (out.length === 0 && (list.models ?? []).some((m) => m.name === 'models/gemini-flash-latest')) {
+    out.push('gemini-flash-latest');
+  }
+  return out;
+}
+
+export function pickFlashModel(list: GeminiModelList): string | null {
+  return pickFlashModels(list)[0] ?? null;
 }
 
 /** Real Gemini client, using structured JSON output. */
@@ -120,6 +129,7 @@ export class GeminiProvider implements AiProvider {
     private readonly configuredModel: string,
     private readonly apiKey: string | undefined,
     private readonly baseUrl: string,
+    private readonly retryDelayMs = 800,
   ) {}
 
   get model(): string {
@@ -137,28 +147,49 @@ export class GeminiProvider implements AiProvider {
       });
     }
 
-    let response = await this.call(this.model, request);
+    // Gemini is regularly overloaded (503) or a model is gone for this key (404).
+    // Retry transient failures with a short wait, then fall back to other models
+    // this key can use. Auth/validation errors (400/401/403) are returned at once.
+    const deadline = Date.now() + 50_000;
+    const queue = [this.model];
+    const tried = new Set<string>();
+    let discovered = false;
+    let response: Response | null = null;
+    let usedModel = this.model;
 
-    // 404 = this key/project cannot use that model any more (Google retires and
-    // restricts models). Ask the API what this key CAN use and retry once.
-    if (response.status === 404) {
-      const replacement = await this.discoverModel();
-      if (replacement && replacement !== this.model) {
-        getLogger().warn(
-          { from: this.model, to: replacement },
-          'Gemini model not found; switching to a model this key can use',
-        );
-        response = await this.call(replacement, request);
-        if (response.ok) this.resolvedModel = replacement;
+    while (queue.length > 0 && Date.now() < deadline) {
+      const model = queue.shift() as string;
+      if (tried.has(model)) continue;
+      tried.add(model);
+
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        response = await this.call(model, request);
+        usedModel = model;
+        const retryable = [500, 502, 503, 504].includes(response.status);
+        if (response.ok || !retryable || attempt === 2 || Date.now() >= deadline) break;
+        await sleep(this.retryDelayMs * 2 ** attempt);
+      }
+      if (response?.ok) break;
+
+      const switchable = [404, 429, 500, 502, 503, 504].includes(response?.status ?? 0);
+      if (!switchable) break;
+      if (!discovered) {
+        discovered = true;
+        queue.push(...(await this.discoverModels()).slice(0, MAX_FALLBACK_MODELS + 1));
       }
     }
 
-    if (!response.ok) {
-      const raw = await response.text().catch(() => '');
+    if (!response || !response.ok) {
+      const raw = (await response?.text().catch(() => '')) ?? '';
       throw new AppError(ERROR_CODES.AI_PROVIDER_ERROR, {
-        message: `Gemini rejected the request (HTTP ${response.status}): ${extractMessage(raw)}`,
-        details: { status: response.status, model: this.model },
+        message: `Gemini rejected the request (HTTP ${response?.status ?? 'none'}): ${extractMessage(raw)}`,
+        details: { status: response?.status ?? null, triedModels: [...tried] },
       });
+    }
+
+    if (usedModel !== this.model) {
+      getLogger().warn({ from: this.model, to: usedModel }, 'Gemini: using a different model');
+      this.resolvedModel = usedModel;
     }
 
     const payload = (await response.json()) as GeminiResponse;
@@ -210,18 +241,22 @@ export class GeminiProvider implements AiProvider {
     }
   }
 
-  private async discoverModel(): Promise<string | null> {
+  private async discoverModels(): Promise<string[]> {
     try {
       const res = await fetch(`${this.baseUrl}/v1beta/models?pageSize=200`, {
         headers: { 'x-goog-api-key': this.apiKey ?? '' },
         signal: AbortSignal.timeout(15_000),
       });
-      if (!res.ok) return null;
-      return pickFlashModel((await res.json()) as GeminiModelList);
+      if (!res.ok) return [];
+      return pickFlashModels((await res.json()) as GeminiModelList);
     } catch {
-      return null;
+      return [];
     }
   }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function extractMessage(raw: string): string {
