@@ -108,7 +108,9 @@ export function pickFlashModels(list: GeminiModelList): string[] {
   const byNewest = (a: string, b: string) => version(b) - version(a) || a.length - b.length;
   const flash = names.filter((n) => /^gemini-\d+(\.\d+)?-flash(-\d+)?$/.test(n)).sort(byNewest);
   const lite = names.filter((n) => /^gemini-\d+(\.\d+)?-flash-lite(-\d+)?$/.test(n)).sort(byNewest);
-  const out = [...flash, ...lite];
+  // Fallback order matters: the newest flash is the usual primary, so after it
+  // fails the fast lite model goes first, then the remaining flash models.
+  const out = [flash[0], ...lite, ...flash.slice(1)].filter((n): n is string => Boolean(n));
   if (out.length === 0 && (list.models ?? []).some((m) => m.name === 'models/gemini-flash-latest')) {
     out.push('gemini-flash-latest');
   }
@@ -164,6 +166,11 @@ export class GeminiProvider implements AiProvider {
 
       for (let attempt = 0; attempt < 3; attempt += 1) {
         response = await this.call(model, request);
+        if (response.status === 400) {
+          // Some models reject a thinking option they do not support; retry without it.
+          const body = await response.clone().text().catch(() => '');
+          if (/thinking/i.test(body)) response = await this.call(model, request, true);
+        }
         usedModel = model;
         const retryable = [500, 502, 503, 504].includes(response.status);
         if (response.ok || !retryable || attempt === 2 || Date.now() >= deadline) break;
@@ -171,7 +178,7 @@ export class GeminiProvider implements AiProvider {
       }
       if (response?.ok) break;
 
-      const switchable = [404, 429, 500, 502, 503, 504].includes(response?.status ?? 0);
+      const switchable = [404, 429, 500, 502, 503, 504, 599].includes(response?.status ?? 0);
       if (!switchable) break;
       if (!discovered) {
         discovered = true;
@@ -211,17 +218,23 @@ export class GeminiProvider implements AiProvider {
     };
   }
 
-  private async call(model: string, request: AiCompletionRequest): Promise<Response> {
-    // 2.5-flash "thinks" and thinking tokens count against maxOutputTokens;
-    // structured extraction does not need it, so switch it off where supported.
-    const thinking = /gemini-2\.5-flash(?!-lite)/.test(model)
-      ? { thinkingConfig: { thinkingBudget: 0 } }
-      : {};
+  private async call(
+    model: string,
+    request: AiCompletionRequest,
+    skipThinking = false,
+  ): Promise<Response> {
+    // Thinking models spend time (and output tokens) "reasoning" before they
+    // answer. Structured extraction does not need it, so keep it minimal.
+    let thinking: Record<string, unknown> = {};
+    if (!skipThinking) {
+      if (/gemini-2\.5-flash(?!-lite)/.test(model)) thinking = { thinkingConfig: { thinkingBudget: 0 } };
+      else if (/^gemini-3/.test(model)) thinking = { thinkingConfig: { thinkingLevel: 'low' } };
+    }
     try {
       return await fetch(`${this.baseUrl}/v1beta/models/${model}:generateContent`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': this.apiKey ?? '' },
-        signal: AbortSignal.timeout(45_000),
+        signal: AbortSignal.timeout(25_000),
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: request.system }] },
           contents: [{ role: 'user', parts: [{ text: request.user }] }],
@@ -235,9 +248,13 @@ export class GeminiProvider implements AiProvider {
         }),
       });
     } catch (error) {
-      throw new AppError(ERROR_CODES.AI_PROVIDER_ERROR, {
-        message: `Could not reach Gemini: ${error instanceof Error ? error.message : 'network error'}`,
-      });
+      // Timeout / network failure: report it as a synthetic 599 so the caller can
+      // move on to another model instead of waiting on this one again.
+      const reason = error instanceof Error ? error.message : 'network error';
+      return new Response(
+        JSON.stringify({ error: { message: `Could not reach ${model}: ${reason}` } }),
+        { status: 599 },
+      );
     }
   }
 
